@@ -1,0 +1,1334 @@
+
+Assignment 1: Local Git Repository Initialization & Basic Operations
+Create and navigate to project folder:
+mkdir local-git-assignment
+cd local-git-assignment
+
+
+Initialize a local Git repository:
+git init
+
+
+Configure initial branch name (Recommended best practice to avoid default master warnings):
+git config --global init.defaultBranch main
+
+
+Stage files:
+git add calculator.py
+git add Greeting.java
+
+
+Commit staged changes:
+git commit -m "add calculator.py"
+git commit -m "Add Greeting.java"
+
+
+View clean commit history (One-line format):
+git log --oneline
+
+
+(Missing Addition) Check working tree status:
+git status
+
+
+Assignment 2: Branch Workflow
+Rename branch from master to main:
+git branch -m master main
+
+(Alternatively, during init: git branch -M main)
+Create and switch to a new feature branch simultaneously:
+git checkout -b feature-sub
+
+(Modern alternative: git switch -c feature-sub)
+Stage and commit changes on the feature branch:
+git add calculator.py
+git commit -m "Add subtraction function on feature branch"
+
+
+Switch back to the main branch:
+git checkout main
+
+
+Merge the feature branch into main:
+git merge feature-sub
+
+
+Assignment 3: Merge Conflict Resolution
+Create and switch to a developer branch (Developer A):
+git checkout -b dev-a-branch
+
+
+Stage and commit Developer A's changes:
+git add Greeting.java
+git commit -m "Developer A changes greeting to Good morning"
+
+
+Switch back to main and commit Developer B's conflicting changes:
+git checkout main
+git add Greeting.java
+git commit -m "Developer B changes greeting to Hey there, Friend on main"
+
+
+Attempt merge (triggers conflict):
+git merge dev-a-branch
+
+
+Resolve conflicts manually (after editing the file), then stage and commit:
+git add Greeting.java
+git commit -m "Resolve merge conflict between main and dev-a-branch"
+
+
+Assignment 4 & 5: GitHub Remote Setup, Pull Requests & Collaboration
+Link local repository to a remote GitHub repository:
+git remote add origin https://github.com/<username>/<repo-name>.git
+
+
+Verify remote connection URL:
+git remote -v
+
+
+Clone a repository (for Collaborators/Developers):
+git clone https://github.com/<username>/<repo-name>.git
+
+
+Push branch to remote and set up upstream tracking:
+git push -u origin main
+git push -u origin feature-b
+
+
+Switch back and pull latest merged changes from remote:
+git checkout main
+git pull origin main
+
+
+Git commands that were missing from the logs:
+git status: Always run this before staging or committing to verify which files are modified or untracked.
+git diff: Useful for checking exact line-by-line changes before committing code or resolving conflicts.
+git branch -d <branch-name>: Used locally to delete a feature branch after it has been successfully merged (matching the "Delete branch" step done on GitHub).
+git fetch: Downloads remote changes without automatically merging them, letting you inspect updates first via git log origin/main.
+
+
+
+Assugnment 2.
+Question 1: Remote Repository Cloning, Editing, and Pushing (java-hello-repo)
+Clone an empty remote repository:
+git clone https://github.com/himanic72538/java-hello-repo.git
+cd java-hello-repo
+
+
+Stage, commit, and push the initial Hello.java file:
+git add Hello.java
+git commit -m "Add initial Hello.java file"
+git push origin main
+
+
+Stage, commit, and push updated code modifications:
+git add Hello.java
+git commit -m "Updates the hello message"
+git push origin main
+
+
+Question 2: Local Repository Initialization (local-init-project)
+Create a directory and initialize a local repository from scratch:
+mkdir local-init-project
+cd local-init-project
+git init
+
+
+Stage and commit the local file:
+git add Hello.java
+git commit -m "Initial commit for local-init-project"
+
+
+Link remote repository and rename default branch to main:
+git remote add origin https://github.com/himanic72538/local-init-project.git
+git branch -m master main
+
+
+Question 3: Branching and Merging Workflow
+Push main branch upstream:
+git push -u origin main
+
+
+Create and switch to a feature branch:
+git checkout -b feature-greeting
+
+
+Stage and commit changes on the feature branch:
+git add Hello.java
+git commit -m "Add feature greeting on branch"
+
+
+Switch back to main, merge the feature branch, and push:
+git checkout main
+git merge feature-greeting
+git push origin main
+
+
+Question 4: Java Application, Factorial Code, and Docker Image Build
+Build a Docker image from a Dockerfile with a custom tag name:
+docker build -t my-java-app .
+
+
+Run the compiled Java application container:
+docker run --rm my-java-app
+
+
+Question 5: Pushing Image to DockerHub
+Log in to DockerHub registry:
+docker login
+
+
+Tag the local image with your DockerHub username namespace:
+docker tag my-java-app himanic72538/my-java-app:latest
+
+
+Push the tagged image to DockerHub:
+docker push himanic72538/my-java-app:latest
+
+
+Question 6 & 7: Code Modification, Re-tagging, and Version 2 Push
+Build the updated application image (Largest of 3 numbers logic):
+docker build -t my-java-app .
+
+
+Tag the new build as version 2 (v2):
+docker tag my-java-app himanic72538/my-java-app:v2
+
+
+Push version 2 to DockerHub:
+docker push himanic72538/my-java-app:v2
+
+
+Question 8: Running Apache Web Server Container
+Run an Apache HTTP server container with port mapping (host_port:container_port):
+docker run -d --name my-apache-server -p 8090:80 httpd
+
+
+
+
+
+
+
+Assignment3.
+Question 1: Run Tomcat Web Server
+Commands:
+cd tomcat
+docker pull tomcat:latest
+docker run -d --name my-tomcat-server -p 9999:8080 tomcat:latest
+
+(Accessed via browser at localhost:9999)
+Question 2: Run Apache Web Server with Volume Mounting & Content Updates
+Commands & Directory Setup:
+mkdir -p ~/my_web_pages
+cd my_web_pages
+
+
+nano File Created: Index.html (Initial version)
+echo "Welcome to C-DAC"
+
+
+Run Apache Container (with port and volume mapping):
+# Cleanup any conflicting or busy ports/containers first if needed
+docker stop my-tomcat-server
+docker rm my-tomcat-server
+docker rm -f my-apache-server
+
+# Run Apache container mounting the local web directory
+docker run -d --name my-apache-server -p 9999:80 -v /my_web_pages:/usr/local/apache2/htdocs/ httpd:latest
+
+
+Updating Content (nano File Edit):
+nano index.html
+
+Updated Code (Index.html / index.html):
+echo "Hello Everyone"
+
+
+Question 3: Python Application & MySQL Container Networking
+Directory Setup:
+cd ~
+mkdir q3-python-mysql
+cd q3-python-mysql
+
+
+nano Files Created:
+q3-python-mysql.py
+import mysql.connector
+
+# Connect to the MySQL container on the shared network
+db = mysql.connector.connect(
+    host="mysql-container",
+    user="root",
+    password="rootpassword",
+    database="testdb"
+)
+cursor = db.cursor()
+
+# Create the table named 'mydata'
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS mydata (
+name VARCHAR(50),
+phone VARCHAR(20)
+)
+""")
+
+# Insert your name and phone number
+cursor.execute("INSERT INTO mydata (name, phone) VALUES ('Abhi', '8668331762')")
+db.commit()
+print("Data inserted successfully by Python application!")
+cursor.close()
+db.close()
+
+
+Dockerfile
+FROM python:3.9-slim
+RUN pip install mysql-connector-python
+WORKDIR /app
+COPY q3-python-mysql.py .
+CMD ["python", "q3-python-mysql.py"]
+
+
+Docker Execution & Networking Commands:
+# Create custom network
+docker network create my-net
+
+# Run MySQL container on the network
+docker run -d --name mysql-container --net my-net -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=testdb mysql:latest
+
+# Build the Python app image
+docker build -t python-mysql-app .
+
+# Run the Python application container
+docker run --rm --net my-net python-mysql-app
+
+# Verify data inside the MySQL container terminal
+docker exec -it mysql-container mysql -u root -prootpassword -D testdb
+
+Inside MySQL prompt:
+SELECT * FROM mydata;
+
+
+Question 4: MySQL with Docker Volumes & Persistence
+Commands & Volume Attachment:
+# Create a Docker named volume for persistent storage
+docker volume create mysql_data_vol
+
+# Remove old MySQL container
+docker rm -f mysql-container
+
+# Run MySQL container attached to the persistent volume
+docker run -d --name mysql-container --net my-net -v mysql_data_vol:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=testdb mysql:latest
+
+# Rerun the Python application to insert data
+cd ~/q3-python-mysql
+docker run --rm --net my-net python-mysql-app
+
+# Check container logs if troubleshooting
+docker logs mysql-container
+
+# Verify data persistence after recreating container
+docker rm -f mysql-container
+docker run -d --name mysql-container --net my-net -v mysql_data_vol:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=testdb mysql:latest
+docker exec -it mysql-container mysql -u root -prootpassword -D testdb
+
+Inside MySQL prompt:
+SELECT * FROM mydata;
+
+
+Question 5: Python Application Using Docker Compose
+Directory Setup:
+mkdir ~/python-compose-app
+cd ~/python-compose-app
+
+
+nano Files Created:
+hello.py
+print("Hello from Python Inside Docker Compose!")
+
+
+Dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY hello.py .
+CMD ["python", "hello.py"]
+
+
+docker-compose.yml
+services:
+  app:
+    build: .
+    container_name: python_compose_container
+
+
+Docker Compose Commands:
+docker compose up --build
+
+
+
+
+A4
+
+
+Question 1: Display Welcome Message in Console
+Build Step / Shell Command Executed:
+echo hello jenku
+
+
+Question 2: Add Two Predefined Numbers Using Python
+Build Step / Shell Command Executed:
+python3 -c "num1 = 10; num2 = 20; print(f'The sum is: {num1 + num2}')"
+
+
+Question 3: Compile and Execute a Java Program
+Build Step / Shell Commands Executed:
+javac Helloworld.java
+java Helloworld
+
+
+Corresponding Java Code (Helloworld.java content implied from output):
+public class Helloworld {
+    public static void main(String[] args) {
+        System.out.println("Hello, world from Java in Jenkins");
+    }
+}
+
+
+Question 4: Display Current Date and Time
+Build Step / Shell Command Executed:
+date
+
+
+Question 5: Fetch Source Code from a GitHub Repository
+Repository URL Configured in Jenkins Git SCM:
+[https://github.com/himanic72538/docker_java_greeter.git](https://github.com/himanic72538/docker_java_greeter.git)
+Actions Performed by Jenkins automatically:
+Clones the repository and checks out the main branch.
+Question 6: Execute a Python Program Stored in a GitHub Repository
+Repository URL Configured in Jenkins Git SCM:
+[https://github.com/himanic72538/docker_jenkins_first.git](https://github.com/himanic72538/docker_jenkins_first.git)
+Build Step / Shell Command Executed:
+python3 hello.py
+
+
+Question 7: Display Files in Current Directory via Shell Script
+Build Step / Shell Command Executed / Script Content:
+echo "Listing files in current workspace directory:"
+ls -al
+
+
+Question 8: Print Even Numbers Between 1 and 50 Using Python
+Build Step / Shell Command Executed:
+python3 -c "print('Even numbers between 1 and 50:'); print([i for i in range(1, 51) if i % 2 == 0])"
+
+
+Question 9: Calculate Factorial of a Number Using Python
+Build Step / Shell Command Executed:
+python3 -c "import math; num = 5; print(f'The factorial of {num} is {math.factorial(num)}')"
+
+
+Question 10: Display OS Name, Current Username, and Disk Space
+Build Step / Shell Script Executed:
+echo "Operating System Information"
+cat /etc/os-release | grep PRETTY_NAME
+
+echo "Current Username"
+whoami
+
+echo "Available Disk Space"
+df -h
+
+
+
+
+Cloud Assignment 5
+Question 1: Create a GitHub repository containing a simple Python application and a Dockerfile. Clone the repository to your local machine.
+Commands & Steps:
+mkdir a4_q1_flask-docker-demo
+cd a4_q1_flask-docker-demo
+nano app.py
+nano Dockerfile
+git init
+git add .
+git commit -m "Initial commit with app and Dockerfile"
+git branch -M main
+git remote add origin https://github.com/himanic72538/a4_q1_flask-docker-demo.git
+git push -u origin main
+git clone https://github.com/himanic72538/a4_q1_flask-docker-demo.git cloned_repo
+
+
+Files Created (nano codes):
+app.py:
+print("Hello from Assignment 4 GitHub Repo!")
+
+
+Dockerfile:
+FROM python:3.9-slim
+WORKDIR /app
+COPY app.py .
+CMD ["python", "app.py"]
+
+
+Question 2: Write a Dockerfile for a simple Python Flask application. Build a Docker image and run a container.
+Commands & Steps:
+mkdir a4_q2_flask_app
+cd a4_q2_flask_app
+nano app.py
+nano Dockerfile
+docker build -t flask-app:latest .
+docker run -d -p 5000:5000 --name flask-container flask-app:latest
+curl http://localhost:5000
+
+
+Files Created (nano codes):
+app.py:
+from flask import Flask
+app = Flask(__name__)
+@app.route("/")
+def hello():
+    return "Hello from Flask Docker App!"
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
+
+
+Dockerfile:
+FROM python:3.9-slim
+WORKDIR /app
+RUN pip install flask
+COPY app.py .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+
+Question 3: Create a simple web application, upload its source code and Dockerfile to GitHub, and verify the repository contents.
+Commands & Steps:
+mkdir a4_q3_web_app
+cd a4_q3_web_app
+nano app.py
+nano Dockerfile
+git init
+git add .
+git commit -m "Add web app source code and Dockerfile"
+git branch -M main
+git remote add origin https://github.com/himanic72538/a4_q3_web_app.git
+git push -u origin main
+
+
+Files Created (nano codes):
+app.py:
+from flask import Flask
+app = Flask(__name__)
+@app.route("/")
+def home():
+    return "Hello from Assignment 3 Web Application!"
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
+
+
+Dockerfile:
+FROM python:3.9-slim
+WORKDIR /app
+RUN pip install flask
+COPY app.py .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+
+Verification: Navigate to [https://github.com/himanic72538/a4_q3_web_app](https://github.com/himanic72538/a4_q3_web_app) in your browser to verify that app.py and Dockerfile are uploaded.
+Question 4: Install and configure Jenkins. Create a Freestyle project that downloads source code from a GitHub repository.
+Configuration Steps:
+Install and start Jenkins on your system/server.
+Open the Jenkins web interface (http://localhost:8080).
+Click New Item, enter a project name, select Freestyle project, and click OK.
+Under Source Code Management, select Git and paste your GitHub repository URL ([https://github.com/himanic72538/a4_q3_web_app.git](https://github.com/himanic72538/a4_q3_web_app.git)).
+Click Save and then click Build Now to download the source code into the workspace.
+Question 5: Configure a Jenkins Freestyle project to fetch source code from GitHub and display a message in the Jenkins console output.
+Configuration Steps & Build Script:
+Create a new Freestyle project in Jenkins.
+Configure Source Code Management -> Git with your GitHub repository URL.
+Under Build Steps, add an Execute shell step:
+echo "Hello from Jenkins! Code successfully fetched from GitHub"
+
+
+Save and click Build Now, then check the Console Output to verify.
+Question 6: Create a Jenkins job that checks out code from GitHub and executes a Python script.
+Configuration Steps & Build Script:
+Create a new Freestyle project in Jenkins.
+Configure Source Code Management -> Git with the repository containing your Python script (e.g., a4_q6.py).
+Under Build Steps, add an Execute shell step:
+python3 a4_q6.py
+
+
+Save and click Build Now to execute the script in the workspace.
+Question 7: Configure Jenkins to execute Docker commands. Verify the Docker installation by running docker --version through a Jenkins job.
+Configuration Steps & Build Script:
+Grant the Jenkins user permissions to run Docker commands on the host machine.
+Create a new Freestyle project in Jenkins.
+Under Build Steps, add an Execute shell step:
+docker --version
+
+
+Save and click Build Now to verify the Docker version output.
+Question 8: Create a Jenkins job that fetches a GitHub repository and builds a Docker image using its Dockerfile.
+Configuration Steps & Build Script:
+Create a Freestyle project in Jenkins.
+Configure Source Code Management -> Git with your GitHub repository URL containing the Dockerfile.
+Under Build Steps, add an Execute shell step:
+docker build -t my-flask-app .
+
+
+Save and click Build Now.
+Question 9: Create a Jenkins job that builds a Docker image and runs a container from that image.
+Configuration Steps & Build Script:
+Create a Freestyle project in Jenkins and configure Git SCM.
+Under Build Steps, add an Execute shell step:
+docker build -t my-flask-app .
+docker run -d -p 5000:5000 --name my-running-app my-flask-app:latest
+
+
+Save and click Build Now.
+Question 10: Modify the application in GitHub, fetch the updated code through Jenkins, and rebuild the Docker image.
+Configuration Steps & Build Script:
+Make code modifications in your GitHub repository.
+Open your Jenkins job configuration and ensure Git SCM is set up.
+Under Build Steps, add the build command:
+docker build -t my-flask-app:latest .
+
+
+Click Build Now to fetch the latest changes and rebuild the image.
+Question 11: Configure a GitHub webhook to trigger a Jenkins build whenever new code is pushed to the repository.
+Configuration Steps:
+Go to your GitHub repository -> Settings -> Webhooks -> Add webhook.
+Set Payload URL to http://<your-jenkins-ip>:8080/github-webhook/.
+Set Content type to application/json and select "Just the push event", then click Add webhook.
+In your Jenkins job configuration, check "GitHub hook trigger for GITScm polling" under Build Triggers.
+Question 12: Create a Jenkins Freestyle project that checks out code from a specified GitHub branch and builds a Docker image.
+Configuration Steps:
+Create a Freestyle project in Jenkins.
+Under Source Code Management -> Git, enter the Repository URL and specify the target branch under Branches to build (e.g., */main).
+Under Build Steps, add docker build -t my-image:latest ..
+Save and trigger the build.
+Question 13: Configure Jenkins to build a Docker image with a specified image name and tag, such as myapp:v1.
+Configuration Steps & Build Script:
+Open your Jenkins job configuration.
+Under Build Steps, provide the tagged build command:
+docker build -t myapp:v1 .
+
+
+Save and click Build Now.
+Question 14: Create a Jenkins job that stops and removes an existing application container before starting a new container using the latest image.
+Configuration Steps & Build Script:
+Open your Jenkins job configuration.
+Under Build Steps (Execute shell), add:
+docker build -t my-flask-app .
+docker stop my-running-app || true
+docker rm my-running-app || true
+docker run -d -p 5000:5000 --name my-running-app my-flask-app:latest
+
+
+Save and run the job.
+Question 15: Configure Jenkins to log in to Docker Hub and push a Docker image built from a GitHub repository.
+Configuration Steps & Build Script:
+Configure Docker Hub credentials in Jenkins or ensure the Jenkins host is logged in (docker login).
+Under Build Steps, add:
+docker build -t himanic72538/my-flask-app:latest .
+docker push himanic72538/my-flask-app:latest
+
+
+Save and run the job to build and push to Docker Hub.
+Question 16: Create a Jenkins job that checks out application code, builds a Docker image, and pushes the image to Docker Hub.
+Configuration Steps & Build Script:
+Create a Git-configured Jenkins job.
+Add an Execute shell build step:
+docker build -t himanic72538/my-flask-app:latest .
+docker push himanic72538/my-flask-app:latest
+
+
+Save and run.
+Question 17: Write a simple Jenkinsfile containing stages to clone a GitHub repository and display a build message.
+Jenkinsfile Code:
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Display Message') {
+            steps {
+                echo 'Hello! This is my custom build message from Jenkins pipeline.'
+            }
+        }
+    }
+}
+
+
+Steps: Commit this file to your GitHub repository, create a Pipeline job in Jenkins referencing it, and run it.
+Question 18: Extend the Jenkinsfile to include stages for checking out code from GitHub and building a Docker image.
+Jenkinsfile Code:
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t my-app-image:latest .'
+            }
+        }
+    }
+}
+
+
+Steps: Update the file in GitHub and trigger the pipeline build.
+Question 19: Create a Jenkins pipeline with stages to fetch code from GitHub, build a Docker image, run a container, and verify that the container is running.
+Jenkinsfile Code:
+pipeline {
+    agent any
+    stages {
+        stage('Fetch Code from GitHub') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t my-app-image:latest .'
+            }
+        }
+        stage('Run Container') {
+            steps {
+                sh 'docker stop my-running-container || true'
+                sh 'docker rm my-running-container || true'
+                sh 'docker run -d --name my-running-container -p 5000:5000 my-app-image:latest'
+            }
+        }
+        stage('Verify Container is Running') {
+            steps {
+                sh 'docker ps --filter name=my-running-container'
+                sh 'docker logs my-running-container'
+            }
+        }
+    }
+}
+
+
+Question 20: Implement a simple CI/CD pipeline using GitHub, Jenkins, and Docker. Whenever application code is pushed to GitHub, Jenkins should fetch the code, build a new Docker image, and run the updated application in a container.
+Jenkinsfile Code:
+pipeline {
+    agent any
+    triggers {
+        githubWebhook()
+    }
+    stages {
+        stage('Fetch Code') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t my-flask-app:latest .'
+            }
+        }
+        stage('Run Container') {
+            steps {
+                sh 'docker stop my-running-app || true'
+                sh 'docker rm my-running-app || true'
+                sh 'docker run -d --name my-running-app -p 5000:5000 my-flask-app:latest'
+            }
+        }
+        stage('Verify Container') {
+            steps {
+                sh 'docker ps --filter name=my-running-app'
+            }
+        }
+    }
+}
+
+
+Steps: Combine the webhook setup (from Q11) with this pipeline script so that every git push automatically updates and redeploys the container.
+
+Assignment 6
+Question 1: Create a Pod named web1 using the nginx image
+Command Executed:
+kubectl run web1 --image=nginx
+
+
+Question 2: Display all Pods running in the current namespace
+Command Executed:
+kubectl get pods
+
+
+Question 3: Display detailed information about the Pod web1
+Command Executed:
+kubectl describe pod web1
+
+
+Question 4: Display the logs generated by the Pod web1
+Command Executed:
+kubectl logs web1
+
+
+Question 5: Delete the Pod web1 and verify that it has been deleted
+Commands Executed:
+kubectl delete pod web1
+kubectl get pods
+
+
+Question 6: Create a Pod named web2 using the httpd image
+Command Executed:
+kubectl run web2 --image=httpd
+
+
+Question 7: Create a ReplicaSet named web-rs with 3 replicas using the nginx image
+Configuration File Created (web-rs.yaml):
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: web-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-rs
+  template:
+    metadata:
+      labels:
+        app: web-rs
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+
+
+Command Executed:
+kubectl apply -f web-rs.yaml
+
+
+Question 8: Display the ReplicaSet and verify that 3 Pods have been created
+Commands Executed:
+kubectl get rs
+kubectl get pods -l app=web-rs
+
+
+Question 9: Delete one Pod managed by web-rs and verify that Kubernetes creates a replacement Pod
+Commands Executed:
+kubectl delete pod web-rs-jtvk7
+kubectl get pods -l app=web-rs
+
+
+Question 10: Scale the ReplicaSet web-rs from 3 replicas to 5 replicas
+Command Executed:
+kubectl scale rs web-rs --replicas=5
+kubectl get pods -l app=web-rs
+
+
+Question 11: Reduce the number of replicas in web-rs from 5 to 2
+Command Executed:
+kubectl scale rs web-rs --replicas=2
+kubectl get pods -l app=web-rs
+
+
+Question 12: Create a Deployment named web-deploy using the nginx image with 3 replicas
+Command Executed:
+kubectl create deployment web-deploy --image=nginx --replicas=3
+
+
+Question 13: Display the Deployment, ReplicaSet and Pods associated with web-deploy
+Commands Executed:
+kubectl get deployment web-deploy
+kubectl get rs -l app=web-deploy
+kubectl get pods -l app=web-deploy
+
+
+Question 14: Scale the Deployment web-deploy from 3 replicas to 5 replicas
+Command Executed:
+kubectl scale deployment web-deploy --replicas=5
+kubectl get pods -l app=web-deploy
+
+
+Question 15: Update the image used by web-deploy from nginx to httpd and verify the rollout
+Commands Executed:
+kubectl set image deployment/web-deploy *=httpd
+kubectl rollout status deployment/web-deploy
+
+
+Question 16: Deliberately create a crashing Pod using the busybox image with the command sh -c "exit 1". Observe its status and restart count
+Command Executed:
+kubectl run crash-pod --image=busybox --restart=Always -- sh -c "exit 1"
+kubectl get pods crash-pod
+
+
+Question 17: Create a Pod using the busybox image that runs sh -c "sleep 5; exit 1". Observe how its status changes over time
+Command Executed:
+kubectl run sleep-pod --image=busybox --restart=Always -- sh -c "sleep 5; exit 1"
+kubectl get pods sleep-pod -w
+
+
+Question 18: Create a Pod using the nginx image but specify a deliberately incorrect image name, such as nginx-invalid. Observe the Pod status and events
+Command Executed:
+kubectl run bad-image-pod --image=nginx-invalid
+kubectl describe pod bad-image-pod
+
+
+Question 19: Delete a Pod belonging to web-deploy and verify that the Deployment creates a replacement Pod
+Commands Executed:
+kubectl delete pod web-deploy-7fbd466958-hplr5
+kubectl get pods -l app=web-deploy
+
+
+Question 20: Delete the Deployment web-deploy and verify that its associated ReplicaSet and Pods are also deleted
+Commands Executed:
+kubectl delete deployment web-deploy
+kubectl get deployments,rs,pods -l app=web-deploy
+
+
+
+Cloud Assignment 7
+Part 1: AWS EC2, S3, and Lambda Assignments
+Question 1: Launch an EC2 instance using Amazon Linux and check its status.
+Steps / Actions on AWS Console:
+Navigate to the EC2 Dashboard and click Launch instance.
+Name the instance (e.g., MyLinuxServer).
+Select Amazon Linux 2023 AMI under Application and OS Images.
+Choose instance type (t2.micro), configure key pair, and launch instance.
+Verify the instance state shows as Running.
+Question 2: Connect to an EC2 instance using SSH or EC2 Instance Connect.
+Command Executed:
+chmod 400 my-key-pair.pem
+ssh -i "my-key-pair.pem" ec2-user@<public-ip-address>
+
+(Successfully connected via SSH, displaying the Amazon Linux 2023 banner).
+Question 3: Install a web server on an EC2 instance and display a simple HTML page.
+Commands Executed on EC2 Terminal:
+sudo yum update -y
+sudo yum install httpd -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo tee /var/www/html/index.html << 'EOF'
+Hello from my AWS EC2 Web Server!
+EOF
+
+(Verified by browsing the instance's public IP address, showing "Hello from my AWS EC2 Web Server!").
+Question 4: Stop and start an EC2 instance and observe the change in its status.
+Steps / Actions on AWS Console:
+Select the instance, click Instance state -> Stop instance (Status changes to Stopped).
+Click Instance state -> Start instance (Status changes back to Running).
+Note: Public IP address may change upon restart unless an Elastic IP is attached.
+Question 5: Create a security group that allows HTTP traffic on port 80.
+Steps / Actions on AWS Console:
+Go to Security Groups -> Create security group.
+Add an Inbound rule: Type HTTP, Protocol TCP, Port range 80, Source Anywhere-IPv4 (0.0.0.0/0).
+Question 6: Create an S3 bucket with a unique name.
+Steps / Actions on AWS Console:
+Navigate to Amazon S3 -> Create bucket.
+Bucket name: pradip-s3-bucket-2026-unique.
+Region: US East (N. Virginia).
+Question 7: Upload three files to an S3 bucket and list the uploaded objects.
+Steps / Actions on AWS Console:
+Open the S3 bucket (pradip-s3-bucket-2026-unique).
+Click Upload, select three text files (New Text Document (2)-Copy.txt, New Text Document (2).txt, New Text Document (3)-Copy.txt), and click Upload.
+Question 8: Download a file from an S3 bucket to your computer.
+Steps / Actions on AWS Console:
+Select an object inside the S3 bucket and click Download to save it locally.
+Question 9: Create a folder in an S3 bucket and upload two files into it.
+Steps / Actions on AWS Console:
+Click Create folder and name it Folder/.
+Open Folder/, click Upload, and upload two files into the folder.
+Question 10: Enable versioning on an S3 bucket and upload multiple versions of the same file.
+Steps / Actions on AWS Console:
+Go to bucket Properties -> Bucket Versioning -> Click Edit -> Select Enabled -> Save changes.
+Upload multiple updates of New Text Document.txt to verify multiple version IDs are tracked under the Versions tab.
+Question 11: Create a Lambda function that prints a simple message.
+Lambda Python Code (a7_q11_lambda_function):
+def lambda_handler(event, context):
+    return {
+        'statusCode': 200,
+        'body': 'Hello, this is a simple log message from Lambda!'
+    }
+
+
+Question 12: Create a Lambda function that accepts two numbers and returns their sum.
+Lambda Python Code (a7_q12_lambda_function_sum):
+def lambda_handler(event, context):
+    num1 = event.get('num1', 0)
+    num2 = event.get('num2', 0)
+    result = num1 + num2
+    return {
+        'statusCode': 200,
+        'sum': result
+    }
+
+
+Question 13: Create a Lambda function that accepts a name as input and returns a greeting.
+Lambda Python Code:
+def lambda_handler(event, context):
+    name = event.get('name', 'Guest')
+    return {
+        'statusCode': 200,
+        'message': f"Hello, {name}! Welcome to AWS Lambda."
+    }
+
+
+Question 14: Test a Lambda function using different JSON inputs and observe the outputs.
+Test Event JSON Example:
+{
+  "name": "Ashwani"
+}
+
+(Observed response returning customized greeting with the provided name).
+Question 15: Create a Lambda function that returns the current date and time.
+Lambda Python Code:
+import datetime
+
+def lambda_handler(event, context):
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return {
+        'statusCode': 200,
+        'current_time': current_time
+    }
+
+
+Part 2: Terraform Assignments
+Terraform 1: Install Terraform and verify its version.
+Commands Executed:
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt-get install terraform
+terraform version
+
+
+Terraform 2: Write a Terraform configuration using the local provider to create a text file containing a welcome message.
+Configuration File (main.tf):
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
+  }
+}
+
+provider "local" {}
+
+resource "local_file" "welcome" {
+  filename = "welcome.txt"
+  content  = "Welcome to Terraform Learning!"
+}
+
+
+Commands Executed:
+terraform init
+terraform plan
+terraform apply -auto-approve
+
+
+Terraform 3: Modify the Terraform configuration to create two text files with different contents.
+Updated Configuration File (main.tf):
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
+  }
+}
+
+provider "local" {}
+
+resource "local_file" "file_one" {
+  filename = "file1.txt"
+  content  = "This is the content of the first file"
+}
+
+resource "local_file" "file_two" {
+  filename = "file2.txt"
+  content  = "This is completely different content for the second file"
+}
+
+
+Command Executed:
+terraform apply -auto-approve
+
+
+Terraform 4: Use Terraform variables to specify the filename and file contents.
+Configuration File (main.tf):
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
+  }
+}
+
+provider "local" {}
+
+resource "local_file" "example" {
+  filename = var.filename
+  content  = var.file_content
+}
+
+
+Variables File (variables.tf):
+variable "filename" {
+  description = "The target name of the file"
+  type        = string
+  default     = "variable_output.txt"
+}
+
+variable "file_content" {
+  description = "The text content to write inside the file"
+  type        = string
+  default     = "Hello, this content came from a Terraform variable!"
+}
+
+
+Terraform 5: Use Terraform outputs to display the names and contents of the files created by the configuration.
+Outputs File (outputs.tf):
+output "created_file_name" {
+  description = "The name of the generated file"
+  value       = local_file.example.filename
+}
+
+output "created_file_content" {
+  description = "The content written inside the generated file"
+  value       = local_file.example.content
+}
+
+
+Command Executed:
+terraform apply -auto-approve
+
+
+
+
+Cloud Self-Learning 2 
+
+
+Question 11: Create a new Git branch, modify a file and merge the branch into main. Demonstrate the use of git stash and git revert.
+Commands Executed:
+mkdir task11-git-demo
+cd task11-git-demo
+git init
+nano demo.txt
+git add .
+git commit -m "Inital commit on main"
+
+# Create and switch to feature branch
+git checkout -b feauture-branch
+nano demo.txt
+
+# Stash demonstration
+git status
+git stash save "saving my work temporarily"
+git stash pop
+
+# Commit changes on feature branch
+git add .
+git commit -m "Complete feature update"
+
+# Merge into master/main
+git checkout master
+git merge feauture-branch
+git log --oneline
+
+# Revert demonstration
+git revert 96eee7d --no-edit
+git log --oneline
+cat demo.txt
+
+
+Question 12: Write a Dockerfile for a simple Java or Python program that prints Hello World. Build the image, run the container and verify the output.
+Commands & Steps:
+mkdir task12-docker-python
+cd task12-docker-python
+nano Hello.java
+nano Dockerfile
+docker build -t java-hello-world .
+docker images
+docker run --rm java-hello-world
+
+
+Files Created (nano codes):
+Hello.java:
+public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+
+
+Dockerfile:
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY Hello.java .
+RUN javac Hello.java
+CMD ["java", "Hello"]
+
+
+Question 13: Create a Dockerized web application using Tomcat with Java or Flask with Python. Build the image, run the application and access it through a browser.
+Commands & Steps:
+mkdir task13-tomcat-app
+cd task13-tomcat-app
+mkdir webapp
+cd webapp
+nano index.jsp
+cd ..
+nano Dockerfile
+docker build -t tomcat-web-app .
+docker run -d -p 8081:8080 --name tomcat-container tomcat-web-app
+
+
+Files Created (nano codes):
+webapp/index.jsp:
+Hello from Dockerized Tomcat & Java!
+Your Tomcat server is up and running successfully.
+
+
+Dockerfile:
+FROM tomcat:9.0-jdk17-temurin
+COPY webapp /usr/local/tomcat/webapps/ROOT
+EXPOSE 8080
+
+
+Question 14: Create two Docker containers, one running a web application and the other running MySQL. Configure container networking, connect the application to the database and store data in a Docker volume.
+Commands & Steps:
+mkdir 14-docker-net-vol
+cd 14-docker-net-vol
+docker network create app.net
+docker volume create mysql-data
+docker run -d --name mysql-container --net app.net -v mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=secretpassword -e MYSQL_DATABASE=testdb mysql:8.0
+nano app.py
+nano Dockerfile
+docker build -t web-app-image .
+docker run --rm --net app.net --name web-container web-app-image
+
+
+Question 15: Create a Kubernetes Pod running Nginx using a YAML file. Apply the file, verify the Pod status and access the application using an appropriate method.
+Commands & Steps:
+mkdir k8s-pod-lab
+cd k8s-pod-lab
+nano nginx-pod.yaml
+kubectl apply -f nginx-pod.yaml
+kubectl get pods
+kubectl port-forward pod/nginx-pod 8085:80
+# In another terminal window:
+curl http://localhost:8085
+
+
+Configuration File (nginx-pod.yaml content implied):
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+
+Question 16: Create a Kubernetes Deployment running five Nginx replicas. Delete one Pod manually and verify that Kubernetes creates a replacement Pod.
+Commands & Steps:
+mkdir k8s-16-deployment-lab
+cd k8s-16-deployment-lab
+kubectl create deployment nginx-deploy --image=nginx --replicas=5
+kubectl get pods -l app=nginx-deploy
+kubectl delete pod <pod-name-to-delete>
+kubectl get pods -l app=nginx-deploy
+
+
+Question 17: Create a Kubernetes Service to expose the Nginx Deployment. Test access to the application using the appropriate Service type and verify that traffic reaches the application Pods.
+Commands & Steps:
+mkdir k8s-17-deployment-lab
+cd k8s-17-deployment-lab
+kubectl expose deployment nginx-deploy --type=NodePort --port=80
+kubectl get svc nginx-deploy
+minikube service nginx-deploy --url
+curl <minikube-service-url>
+
+
+Question 18: Create a Jenkins Freestyle job that prints Hello Jenkins. Create another job that checks out a GitHub repository and executes a Java or Python program.
+Commands & Steps:
+Job 1 (hello-jenkins): Created a Freestyle job with shell step echo "Hello World".
+Job 2 (SL2_18_py):
+git clone https://github.com/himanic72538/SL2_Q18_Py_hello.git
+cd SL2_Q18_Py_hello
+nano hey.py
+git add .
+git commit -m "This is Self leaning Q18 just for leanring"
+git push origin main
+
+
+Configured Jenkins job SL2_18_py using Git SCM with URL [https://github.com/himanic72538/SL2_Q18_Py_hello.git](https://github.com/himanic72538/SL2_Q18_Py_hello.git) and branch */main.
+Question 19: Configure a Jenkins job to build a Docker image from an application repository. Run the job, verify the build result and publish the image to Docker Hub.
+Commands & Steps:
+cd SL2_Q18_Py_hello
+nano Dockerfile
+git add .
+git commit -m "This is Docker file for SL2 Q18"
+git push origin main
+
+
+Jenkins Build Step Configuration (Execute shell):
+docker build -t himanic72538/myapp:v1 .
+docker login
+docker push himanic72538/myapp:v1
+
+
+Question 20: Install Terraform locally and write a configuration to provision an AWS EC2 instance. Extend the configuration to create a VPC and subnet, use variables and outputs, and verify the Terraform state using terraform plan, terraform apply and terraform destroy.
+Commands & Steps:
+mkdir terraform-q20-full-lab
+cd terraform-q20-full-lab
+nano main.tf
+terraform init
+terraform plan
+terraform apply -auto-approve
+terraform destroy
+
+
+Configuration File (main.tf):
+# Configure the AWS Provider
+provider "aws" {
+  region = "ap-south-1"
+}
+
+# 1. Create a VPC
+resource "aws_vpc" "lab_vpc" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  tags = {
+    Name = "Lab-vpc"
+  }
+}
+
+# 2. Create a Subnet inside the VPC
+resource "aws_subnet" "lab_subnet" {
+  vpc_id                  = aws_vpc.lab_vpc.id
+  cidr_block              = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "Lab-subnet"
+  }
+}
+
+# 3. Create an EC2 Instance inside the Subnet
+resource "aws_instance" "lab_ec2" {
+  ami           = "ami-019324397f534581" # Example AMI ID
+  instance_type = "t3.micro"
+  subnet_id     = aws_subnet.lab_subnet.id
+  tags = {
+    Name = "Lab-ec2-Instance"
+  }
+}
+
+
+
